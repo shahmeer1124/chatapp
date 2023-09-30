@@ -5,14 +5,14 @@ class Msgcontent {
   final String? content;
   final String? type;
   final Timestamp? addtime;
-  bool isSeen;
+
 
   Msgcontent({
     this.token,
     this.content,
     this.type,
     this.addtime,
-    this.isSeen=false
+ 
   });
 
   factory Msgcontent.fromFirestore(
@@ -25,7 +25,7 @@ class Msgcontent {
       content: data?['content'],
       type: data?['type'],
       addtime: data?['addtime'],
-      isSeen: data?['isSeen'],
+
     );
   }
 
@@ -35,7 +35,7 @@ class Msgcontent {
       if (content != null) "content": content,
       if (type != null) "type": type,
       if (addtime != null) "addtime": addtime,
-      "isSeen":isSeen
+
     };
   }
 }

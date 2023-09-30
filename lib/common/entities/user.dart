@@ -65,7 +65,7 @@ class UserItem {
   String? avatar;
   int? online;
   int? type;
-  String? fcmtoken;
+ 
 
   UserItem({
     this.access_token,
@@ -75,13 +75,13 @@ class UserItem {
     this.avatar,
     this.online,
     this.type,
-    this.fcmtoken,
+ 
   });
 
   factory UserItem.fromJson(Map<String, dynamic> json) => UserItem(
         access_token: json["access_token"],
         token: json["token"],
-        fcmtoken: json["fcmtoken"],
+      
         name: json["name"],
         description: json["description"],
         avatar: json["avatar"],
@@ -93,7 +93,7 @@ class UserItem {
         "access_token": access_token,
         "token": token,
         "name": name,
-        "fcmtoken": fcmtoken,
+        
         "description": description,
         "avatar": avatar,
         "online": online,

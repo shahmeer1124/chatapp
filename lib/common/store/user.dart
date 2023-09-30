@@ -52,12 +52,7 @@ class UserStore extends GetxController {
     msgtoken = value;
   }
 
-// set fcm token
-  Future<void> setFcmToken(String value) async {
-    print('messagetoken$value');
-    await StorageService.to.setString(STORAGE_FCM_TOKEN_KEY, value);
-    fcmtoken = value;
-  }
+
 
   // 获取 profile
   Future<String> getProfile() async {
@@ -70,13 +65,13 @@ class UserStore extends GetxController {
 
   // saving profile
   Future<void> saveProfile(UserItem profile) async {
-    print('profiler${profile.fcmtoken}');
+   
     _isLogin.value = true;
     StorageService.to.setString(STORAGE_USER_PROFILE_KEY, jsonEncode(profile));
     _profile(profile);
     setToken(profile.access_token!);
     setMsgToken(profile.token!);
-    setFcmToken(profile.fcmtoken!);
+   
   }
 
   // 注销

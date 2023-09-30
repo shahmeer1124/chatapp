@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:lechat/common/apis/apis.dart';
+import 'package:lechat/common/entities/chat.dart';
 import 'package:lechat/pages/messages/voicecall/state.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -32,28 +35,31 @@ class VoiceCallController extends GetxController {
     var data = Get.parameters;
     state.to_name.value = data['to_name'] ?? "";
     state.to_avatar.value = data['to_avatar'] ?? "";
-    to_token = data['to_token'] ?? '';
-    fromother = data['fromother'] ?? '';
+    state.call_role.value = data['call_role'] ?? "";
+    state.doc_id.value = data['doc_id'] ?? "";
+    state.to_token.value = data['to_token'] ?? "";
 
-    super.onInit();
-    if (fromother != 'no') {
-      sendPushNotification(state.to_name.value.toString(), "Incoming Call");
-    }
+    print('tokenprinter${state.to_token.value}');
     initEngine();
+    super.onInit();
   }
 
   Future<void> sendPushNotification(String title, String message) async {
     String? fcmToken = await getFCMTokenFromFirestore();
     List<Future<void>> futures = [];
     Map<String, dynamic> notification = {
-      'notification': {'title': title, 'body': 'message:${message}',"click_action": "Print('hello wordls')"},
+      'notification': {
+        'title': title,
+        'body': 'message:${message}',
+        "click_action": "Print('hello wordls')"
+      },
       'data': {
         "click_action": "FLUTTER_NOTIFICATION_CLICK",
         "id": "1",
         "status": "done",
-        "to_name":state.to_name.value.toString(),
-        "to_avatar":state.to_avatar.toString(),
-        "to_token":state.to_token.toString()
+        "to_name": state.to_name.value.toString(),
+        "to_avatar": state.to_avatar.toString(),
+        "to_token": state.to_token.toString()
       },
       'to': fcmToken,
     };
@@ -118,6 +124,27 @@ class VoiceCallController extends GetxController {
         scenario: AudioScenarioType.audioScenarioGameStreaming,
         profile: AudioProfileType.audioProfileDefault);
     await joinChannel();
+    if (state.call_role == 'anchor') {
+      await sendNotification('voice');
+      await player.play();
+    }
+  }
+
+  Future<void> sendNotification(String call_type) async {
+    print('yes this get called');
+    CallRequestEntity callRequestEntity = CallRequestEntity();
+    callRequestEntity.call_type = call_type;
+    callRequestEntity.to_token = state.to_token.value;
+    callRequestEntity.to_avatar = state.to_avatar.value;
+    callRequestEntity.doc_id = state.doc_id.value;
+    callRequestEntity.to_name = state.to_name.value;
+    print('message going to toke${state.to_token.value}');
+    var res = await ChatAPI.call_notifications(params: callRequestEntity);
+    if (res.code == 0) {
+      print('notification success');
+    } else {
+      print('notification unsuccessful');
+    }
   }
 
   String formatCallDuration(int seconds) {
@@ -136,16 +163,41 @@ class VoiceCallController extends GetxController {
     }
   }
 
+  Future<String> getToken() async {
+    if (state.call_role == 'anchor') {
+      state.channelId.value = md5
+          .convert(utf8.encode("${profile_token}_${state.to_token}"))
+          .toString();
+    } else {
+      state.channelId.value = md5
+          .convert(utf8.encode("${state.to_token}_${profile_token}"))
+          .toString();
+    }
+    CallTokenRequestEntity callTokenRequestEntity = CallTokenRequestEntity();
+    callTokenRequestEntity.channel_name = state.channelId.value;
+    print('channel_id_is_this${state.channelId.value}');
+    var res = await ChatAPI.call_token(params: callTokenRequestEntity);
+    if (res.code == 0) {
+      return res.data!;
+    }
+    return "";
+  }
+
   Future<void> joinChannel() async {
     await Permission.microphone.request();
     EasyLoading.show(
         indicator: CircularProgressIndicator(),
         maskType: EasyLoadingMaskType.clear,
         dismissOnTap: true);
+    String token = await getToken();
+    if (token.isEmpty) {
+      EasyLoading.dismiss();
+      Get.back();
+      return;
+    }
     await engine.joinChannel(
-        token:
-            '007eJxTYLBnP6OUcnPBl7MXV51snrfp5vvoDLXQQnXPkq5fJQ91d31TYEgzTLRMSkwzSE4zMTdJTk6xSEqzNLQ0MUoxtTSwTDYzYP4gmNoQyMiQn/6ImZEBAkF8Noac1OSMxBIGBgBhpiKn',
-        channelId: 'lechat',
+        token: token,
+        channelId: state.channelId.value,
         uid: 0,
         options: ChannelMediaOptions(
           clientRoleType: ClientRoleType.clientRoleBroadcaster,
@@ -155,6 +207,7 @@ class VoiceCallController extends GetxController {
   }
 
   void leaveChannel() async {
+    print('leavechannelcalled');
     EasyLoading.show(
       indicator: CircularProgressIndicator(),
       maskType: EasyLoadingMaskType.clear,

@@ -3,8 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Msg {
   final String? from_token;
   final String? to_token;
-  final bool? last_msg_seen;
-  final String? last_message_token;
+
   final String? from_name;
   final String? to_name;
   final String? from_avatar;
@@ -17,13 +16,11 @@ class Msg {
   final Timestamp? last_time;
   final int? msg_num;
 
-
   Msg({
     this.from_token,
     this.to_token,
     this.from_name,
     this.to_name,
-    this.last_message_token,
     this.from_avatar,
     this.to_avatar,
     this.from_online,
@@ -33,18 +30,16 @@ class Msg {
     this.last_msg,
     this.last_time,
     this.msg_num,
-    this.last_msg_seen,
   });
 
   factory Msg.fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> snapshot,
-      SnapshotOptions? options,
-      ) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
     final data = snapshot.data();
     return Msg(
       from_token: data?['from_token'],
       to_token: data?['to_token'],
-      last_message_token: data?['last_message_token'],
       from_name: data?['from_name'],
       to_name: data?['to_name'],
       from_avatar: data?['from_avatar'],
@@ -56,7 +51,6 @@ class Msg {
       last_msg: data?['last_msg'],
       last_time: data?['last_time'],
       msg_num: data?['msg_num'],
-      last_msg_seen: data?['last_msg_seen'],
     );
   }
 
@@ -64,8 +58,6 @@ class Msg {
     return {
       if (from_token != null) "from_token": from_token,
       if (to_token != null) "to_token": to_token,
-      if (last_message_token != null) "last_message_token": last_message_token,
-
       if (from_name != null) "from_name": from_name,
       if (to_name != null) "to_name": to_name,
       if (from_avatar != null) "from_avatar": from_avatar,
@@ -77,7 +69,6 @@ class Msg {
       if (last_msg != null) "last_msg": last_msg,
       if (last_time != null) "last_time": last_time,
       if (msg_num != null) "msg_num": msg_num,
-       if (last_msg_seen != null) "last_msg_seen": last_msg_seen,
     };
   }
 }

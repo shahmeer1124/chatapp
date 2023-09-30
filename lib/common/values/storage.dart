@@ -7,7 +7,7 @@ const String STORAGE_USER_TOKEN_KEY = 'user_token';
 // set message token
 const String STORAGE_MESSAGE_TOKEN_KEY = 'message_token';
 // fcm token
-const String STORAGE_FCM_TOKEN_KEY = 'fcm_token';
+
 
 
 

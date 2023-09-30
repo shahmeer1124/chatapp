@@ -20,30 +20,33 @@ class ContactController extends GetxController {
     asyncLoadAllData();
     super.onReady();
   }
-  
+
   void goChat(ContactItem contactItem) async {
-  var from_messages = await db
-      .collection("message")
-      .withConverter(
-          fromFirestore: Msg.fromFirestore,
-          toFirestore: (Msg msg, options) => msg.toFirestore())
-      .where("from_token", isEqualTo: token)
-      .where("to_token", isEqualTo: contactItem.token)
-      .get();
+    print('to_user_token${contactItem.token}');
+    var from_messages = await db
+        .collection("message")
+        .withConverter(
+            fromFirestore: Msg.fromFirestore,
+            toFirestore: (Msg msg, options) => msg.toFirestore())
+        .where("from_token", isEqualTo: token)
+        .where("to_token", isEqualTo: contactItem.token)
+        .get();
 
-  var to_messages = await db
-      .collection("message")
-      .withConverter(
-          fromFirestore: Msg.fromFirestore,
-          toFirestore: (Msg msg, options) => msg.toFirestore())
-      .where("from_token", isEqualTo: contactItem.token)
-      .where("to_token", isEqualTo: token)
-      .get();
+    var to_messages = await db
+        .collection("message")
+        .withConverter(
+            fromFirestore: Msg.fromFirestore,
+            toFirestore: (Msg msg, options) => msg.toFirestore())
+        .where("from_token", isEqualTo: contactItem.token)
+        .where("to_token", isEqualTo: token)
+        .get();
 
-  if (from_messages.docs.isEmpty && to_messages.docs.isEmpty) {
-    // If both lists are empty, create a new message document
-    var profile = UserStore.to.profile;
-    var msgdata = Msg(
+    if (from_messages.docs.isEmpty && to_messages.docs.isEmpty) {
+        print('againtokencheckcup1${contactItem.token}');
+
+      // If both lists are empty, create a new message document
+      var profile = UserStore.to.profile;
+      var msgdata = Msg(
         from_token: profile.token,
         to_token: contactItem.token,
         from_avatar: profile.avatar,
@@ -55,45 +58,46 @@ class ContactController extends GetxController {
         last_msg: '',
         last_time: Timestamp.now(),
         msg_num: 0,
-        last_msg_seen: false,
-        );
-    var doc_id = await db
-        .collection("message")
-        .withConverter(
-            fromFirestore: Msg.fromFirestore,
-            toFirestore: (Msg msg, options) => msg.toFirestore())
-        .add(msgdata);
-    Get.toNamed("/chat", arguments: {
-      "doc_id": doc_id.id,
-      "to_token": contactItem.token ?? '',
-      "to_name": contactItem.name ?? '',
-      'to_avatar': contactItem.avatar ?? '',
-      "to_online": contactItem.online.toString()
-    });
-  } else {
-    if (from_messages.docs.isNotEmpty && from_messages.docs.first.id.isNotEmpty) {
-      // Check if the 'from_messages' list is not empty
+      );
+      var doc_id = await db
+          .collection("message")
+          .withConverter(
+              fromFirestore: Msg.fromFirestore,
+              toFirestore: (Msg msg, options) => msg.toFirestore())
+          .add(msgdata);
       Get.toNamed("/chat", arguments: {
-        "doc_id": from_messages.docs.first.id,
+        
+        "doc_id": doc_id.id,
         "to_token": contactItem.token ?? '',
         "to_name": contactItem.name ?? '',
         'to_avatar': contactItem.avatar ?? '',
         "to_online": contactItem.online.toString()
       });
-    }
-    if (to_messages.docs.isNotEmpty && to_messages.docs.first.id.isNotEmpty) {
-      // Check if the 'to_messages' list is not empty
-      Get.toNamed("/chat", arguments: {
-        "doc_id": to_messages.docs.first.id,
-        "to_token": contactItem.token ?? '',
-        "to_name": contactItem.name ?? '',
-        'to_avatar': contactItem.avatar ?? '',
-        "to_online": contactItem.online.toString()
-      });
+    } else {
+      if (from_messages.docs.isNotEmpty &&
+          from_messages.docs.first.id.isNotEmpty) {
+        print('againtokencheckcup${contactItem.token}');
+        // Check if the 'from_messages' list is not empty
+        Get.toNamed("/chat", arguments: {
+          "doc_id": from_messages.docs.first.id,
+          "to_token": contactItem.token ?? '',
+          "to_name": contactItem.name ?? '',
+          'to_avatar': contactItem.avatar ?? '',
+          "to_online": contactItem.online.toString()
+        });
+      }
+      if (to_messages.docs.isNotEmpty && to_messages.docs.first.id.isNotEmpty) {
+        // Check if the 'to_messages' list is not empty
+        Get.toNamed("/chat", arguments: {
+          "doc_id": to_messages.docs.first.id,
+          "to_token": contactItem.token ?? '',
+          "to_name": contactItem.name ?? '',
+          'to_avatar': contactItem.avatar ?? '',
+          "to_online": contactItem.online.toString()
+        });
+      }
     }
   }
-}
-
 
   // void goChat(ContactItem contactItem) async {
   //   var from_messages = await db
@@ -143,7 +147,7 @@ class ContactController extends GetxController {
   //     });
   //   } else {
   //     if(from_messages.docs.first.id.isNotEmpty){
-        
+
   //     Get.toNamed("/chat", arguments: {
   //       "doc_id": from_messages.docs.first.id,
   //       "to_token": contactItem.token ?? '',
@@ -153,7 +157,7 @@ class ContactController extends GetxController {
   //     });
   //     }
   //     if(to_messages.docs.first.id.isNotEmpty){
-        
+
   //     Get.toNamed("/chat", arguments: {
   //       "doc_id": to_messages.docs.first.id,
   //       "to_token": contactItem.token ?? '',
@@ -164,9 +168,6 @@ class ContactController extends GetxController {
   //     }
   //   }
   // }
-
-
-
 
   asyncLoadAllData() async {
     EasyLoading.show(
@@ -183,4 +184,3 @@ class ContactController extends GetxController {
     EasyLoading.dismiss();
   }
 }
-

@@ -29,7 +29,21 @@ class ChatList extends GetView<ChatController> {
                       }
                       return LeftChatItem(item);
                     }, childCount: controller.state.msgcontentList.length),
-                  ))
+                  )),
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.w),
+                sliver: SliverToBoxAdapter(
+                  child: controller.state.isLoading.value
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Loading',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                ),
+              )
             ],
           ),
         ));

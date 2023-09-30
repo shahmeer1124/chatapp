@@ -107,7 +107,8 @@ class ChatPage extends GetView<ChatController> {
                               Container(
                                 width: 220.w,
                                 child: TextField(
-                                  style: appstyle(18, Colors.white, FontWeight.normal),
+                                  style: appstyle(
+                                      18, Colors.white, FontWeight.normal),
                                   controller: controller.textController,
                                   decoration: InputDecoration(
                                       focusedBorder: const OutlineInputBorder(
@@ -202,7 +203,10 @@ class ChatPage extends GetView<ChatController> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              print('yahicallhuahai');
+                              controller.imgFromGallery();
+                            },
                             child: Container(
                               padding: EdgeInsets.all(10.h),
                               decoration: BoxDecoration(

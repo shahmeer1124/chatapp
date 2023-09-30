@@ -109,8 +109,8 @@ Widget rightChatItem(Msgcontent item) {
                     Padding(
                       padding: EdgeInsets.only(right: 5.w, bottom: 5.w),
                       child: Icon(
-                        item.isSeen ? Icons.done_all : Icons.done,
-                        color: item.isSeen ? Colors.blue : Colors.white,
+                        Icons.done,
+                        color: Colors.blue,
                         size: 16.0,
                       ),
                     ),

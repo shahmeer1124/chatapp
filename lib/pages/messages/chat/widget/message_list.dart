@@ -98,15 +98,11 @@ class MessageList extends GetView<MessageController> {
                           item.data().last_msg! ?? '',
                           overflow: TextOverflow.clip,
                           maxLines: 1,
-                          style: item.data().last_message_token !=
-                                      controller.token &&
-                                  item.data().last_msg_seen == false
-                              ? appstyle(16, Colors.black, FontWeight.normal)
-                              : const TextStyle(
-                                  fontFamily: 'Avenir',
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 14,
-                                  color: AppColors.thirdElement),
+                          style: const TextStyle(
+                              fontFamily: 'Avenir',
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: AppColors.thirdElement),
                         ),
                       ],
                     ),
@@ -199,13 +195,8 @@ class MessageList extends GetView<MessageController> {
                         ...outgoingMessages
                       ];
 
-                      // messages.sort((a, b) {
-                      //   // Sort messages by timestamp here if needed
-                      // });
-
                       return SliverList(
-                        delegate:
-                            SliverChildBuilderDelegate((context, index) {
+                        delegate: SliverChildBuilderDelegate((context, index) {
                           var item = messages[index];
                           return MsgListItem(item);
                         }, childCount: messages.length),
@@ -220,69 +211,4 @@ class MessageList extends GetView<MessageController> {
       ],
     );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Obx(() => SmartRefresher(
-  //         enablePullDown: true,
-  //         enablePullUp: true,
-  //         controller: controller.refreshController,
-  //         onLoading: controller.onloading,
-  //         onRefresh: controller.onrefresh,
-  //         header: WaterDropHeader(),
-  //         child: CustomScrollView(
-  //           slivers: [
-  //             SliverPadding(
-  //               padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.w),
-  //               sliver: SliverList(
-  //                 delegate: SliverChildBuilderDelegate((context, index) {
-  //                   var item = controller.state.msglist[index];
-  //                   return MsgListItem(item);
-  //                 }, childCount: controller.state.msglist.length),
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       ));
-  // }
-  // @override
-  // Widget build(BuildContext context) {
-  //   return StreamBuilder<QuerySnapshot<Msg>>(
-  //     stream:
-  //         controller.asyncLoadSnapShotData(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return CircularProgressIndicator(); // Display a loading indicator while data is loading.
-  //       }
-
-  //       if (snapshot.hasError) {
-  //         return Text('Error: ${snapshot.error}');
-  //       }
-
-  //       final messages = snapshot.data?.docs ?? [];
-
-  //       return SmartRefresher(
-  //         enablePullDown: true,
-  //         enablePullUp: true,
-  //         controller: controller.refreshController,
-  //         onLoading: controller.onloading,
-  //         onRefresh: controller.onrefresh,
-  //         header: WaterDropHeader(),
-  //         child: CustomScrollView(
-  //           slivers: [
-  //             SliverPadding(
-  //               padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.w),
-  //               sliver: SliverList(
-  //                 delegate: SliverChildBuilderDelegate((context, index) {
-  //                   print('listlength${messages.length}');
-  //                   var item = messages[index];
-  //                   return MsgListItem(item);
-  //                 }, childCount: messages.length),
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }
