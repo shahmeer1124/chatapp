@@ -1,56 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:lechat/common/values/server.dart';
 
 import '../../../../common/entities/msgcontent.dart';
 import '../../../../common/style/color.dart';
 
-// Widget LeftChatItem(Msgcontent item) {
-//   return Container(
-//     padding: EdgeInsets.only(left: 15.w, top: 10.w, right: 15.w, bottom: 10.w),
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.start,
-//       children: [
-//         ConstrainedBox(
-//           constraints: BoxConstraints(
-//               // maxHeight: 40.w,
-//               // maxWidth: 230.w,
-//               ),
-//           child: Container(
-//             margin: EdgeInsets.only(right: 10.w, top: 0.w),
-//             padding: EdgeInsets.only(
-//                 left: 10.w, top: 10.w, right: 10.w, bottom: 10.w),
-//             decoration: BoxDecoration(
-//                 color: Colors.orange,
-//                 borderRadius: BorderRadius.all(
-//                   Radius.circular(10.w),
-//                 )),
-//             child: item.type == 'text'
-//                 ? Text(
-//                     "${item.content}",
-//                     style: TextStyle(color: Colors.white, fontSize: 18),
-//                   )
-//                 : ConstrainedBox(
-//                     child: GestureDetector(
-//                       onTap: () {},
-//                       child: CachedNetworkImage(
-//                         imageUrl: "${item.content}",
-//                         height: 50,
-//                         width: 50,
-//                       ),
-//                     ),
-//                     constraints: BoxConstraints(
-//                       maxWidth: 90.w,
-//                     ),
-//                   ),
-//           ),
-//         )
-//       ],
-//     ),
-//   );
-// }
 
 Widget LeftChatItem(Msgcontent item) {
+   var imagepath = null;
+  if (item.type == 'image') {
+    print('imagedata${item.content}');
+   imagepath= item.content?.replaceAll('http://localhost/', SERVER_API_URL);
+  }
   return Container(
     padding: EdgeInsets.only(left: 15.w, top: 10.w, right: 15.w, bottom: 10.w),
     child: Row(
@@ -78,9 +40,8 @@ Widget LeftChatItem(Msgcontent item) {
               : GestureDetector(
                   onTap: () {},
                   child: CachedNetworkImage(
-                    imageUrl: "${item.content}",
-                    height: 50,
-                    width: 50,
+                    imageUrl: imagepath,
+                    width: 0.8.sw,
                     fit: BoxFit.cover, // Adjust the fit as needed
                   ),
                 ),

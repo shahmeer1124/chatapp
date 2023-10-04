@@ -9,6 +9,8 @@ class MessageState {
   RxList<QueryDocumentSnapshot<Msg>> msglist =
       <QueryDocumentSnapshot<Msg>>[].obs;
   RxList<Message> msgslist = <Message>[].obs;
+  RxList<CallMessage> calllist = <CallMessage>[].obs;
+
   var head_detail = UserItem().obs;
   RxBool tabstatus = true.obs;
 }

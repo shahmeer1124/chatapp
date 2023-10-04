@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,7 +10,6 @@ import '../../../common/apis/user.dart';
 import '../../../common/entities/user.dart';
 import '../../../common/routes/names.dart';
 import '../../../common/store/user.dart';
-import '../../../common/utils/http.dart';
 
 class SignInController extends GetxController {
   SignInController();
@@ -31,6 +29,7 @@ class SignInController extends GetxController {
         var user = await _googleSignIn.signIn();
 
         if (user != null) {
+          print('meinphotourllaya${user.photoUrl}');
           String? displayName = user.displayName;
           String email = user.email;
           String id = user.id;

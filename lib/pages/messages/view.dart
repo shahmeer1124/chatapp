@@ -5,10 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lechat/common/utils/date.dart';
 import 'package:lechat/common/values/colors.dart';
-import 'package:lechat/pages/messages/chat/widget/chat_list.dart';
 import '../../common/entities/message.dart';
 import '../../common/routes/names.dart';
-import 'chat/widget/message_list.dart';
 import 'controller.dart';
 
 class MessagePage extends GetView<MessageController> {
@@ -44,10 +42,27 @@ class MessagePage extends GetView<MessageController> {
                               offset: Offset(0, 1))
                         ]),
                     child: controller.state.head_detail.value.avatar == null
-                        ? Image(
+                        ? const Image(
                             image:
                                 AssetImage('assets/images/account_header.png'))
-                        : Text('Hi'),
+                        : CachedNetworkImage(
+                            imageUrl:
+                                controller.state.head_detail.value.avatar!,
+                            height: 44.w,
+                            width: 44.w,
+                            imageBuilder: (context, ImageProvider) => Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(22.w),
+                                ),
+                                image: DecorationImage(
+                                    image: ImageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => const Image(
+                                image: AssetImage(
+                                    'assets/images/account_header.png')),
+                          ),
                   ),
                 ),
                 Positioned(
@@ -74,7 +89,7 @@ class MessagePage extends GetView<MessageController> {
   Widget _headTabs() {
     return Container(
       height: 48.h,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: AppColors.primarySecondaryBackground,
           borderRadius: BorderRadius.all(Radius.circular(5))),
       width: 320.w,
@@ -97,8 +112,8 @@ class MessagePage extends GetView<MessageController> {
                             blurRadius: 3,
                             offset: Offset(2, 3))
                       ],
-                      borderRadius: BorderRadius.all(Radius.circular(5)))
-                  : BoxDecoration(),
+                      borderRadius: const BorderRadius.all(Radius.circular(5)))
+                  : const BoxDecoration(),
               width: 150.w,
               height: 40.w,
               child: Row(
@@ -121,7 +136,7 @@ class MessagePage extends GetView<MessageController> {
             },
             child: Container(
               decoration: controller.state.tabstatus.value == true
-                  ? BoxDecoration()
+                  ? const BoxDecoration()
                   : BoxDecoration(
                       color: AppColors.primaryBackground,
                       boxShadow: [
@@ -131,7 +146,7 @@ class MessagePage extends GetView<MessageController> {
                             blurRadius: 3,
                             offset: Offset(2, 3))
                       ],
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
               width: 150.w,
               height: 40.w,
               child: Row(
@@ -159,14 +174,12 @@ class MessagePage extends GetView<MessageController> {
       child: InkWell(
         onTap: () {
           if (item.doc_id != null) {
-            print('docentid${item.doc_id}');
             Get.toNamed(AppRoutes.Chat, arguments: {
-              "doc_id":item.doc_id!,
-              "to_token":item.token!,
-              "to_name":item.name!,
-              "to_avatar":item.avatar!,
-              "to_online":item.online.toString()
-
+              "doc_id": item.doc_id!,
+              "to_token": item.token!,
+              "to_name": item.name!,
+              "to_avatar": item.avatar!,
+              "to_online": item.online.toString()
             });
           }
         },
@@ -186,10 +199,11 @@ class MessagePage extends GetView<MessageController> {
                         color: Colors.grey.withOpacity(0.1),
                         spreadRadius: 1,
                         blurRadius: 2,
-                        offset: Offset(0, 1))
+                        offset: const Offset(0, 1))
                   ]),
               child: item.avatar == null
-                  ? Image(image: AssetImage('assets/images/account_header.png'))
+                  ? const Image(
+                      image: AssetImage('assets/images/account_header.png'))
                   : CachedNetworkImage(
                       imageUrl: item.avatar!,
                       imageBuilder: (context, imageProvider) => Container(
@@ -264,7 +278,7 @@ class MessagePage extends GetView<MessageController> {
                               color: AppColors.thirdElement,
                               fontSize: 14.sp),
                         ),
-                        item.msg_num == null
+                        item.msg_num == 0
                             ? Container()
                             : Container(
                                 decoration: const BoxDecoration(
@@ -284,6 +298,128 @@ class MessagePage extends GetView<MessageController> {
                                       fontSize: 14.sp),
                                 ),
                               )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget callListItem(CallMessage item) {
+    return Container(
+      padding: EdgeInsets.only(top: 10.h, left: 0.w, right: 0.w, bottom: 10.h),
+      child: InkWell(
+        onTap: () {
+          // if (item.doc_id != null) {
+          //   Get.toNamed(AppRoutes.Chat, arguments: {
+          //     "doc_id": item.doc_id!,
+          //     "to_token": item.token!,
+          //     "to_name": item.name!,
+          //     "to_avatar": item.avatar!,
+          //     "to_online": '0'
+          //   });
+          // }
+        },
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 0.h, left: 0.w, right: 10.w),
+              width: 44.h,
+              height: 44.h,
+              decoration: BoxDecoration(
+                  color: AppColors.primarySecondaryBackground,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(22.h),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: const Offset(0, 1))
+                  ]),
+              child: item.avatar == null
+                  ? const Image(
+                      image: AssetImage('assets/images/account_header.png'))
+                  : CachedNetworkImage(
+                      imageUrl: item.avatar!,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(22.w)),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 175.w,
+                    height: 44.w,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${item.name!}',
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          softWrap: true,
+                          style: TextStyle(
+                              fontFamily: "Avenir",
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.thirdElement,
+                              fontSize: 14.sp),
+                        ),
+                        Text(
+                          '${item.call_time}',
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          softWrap: true,
+                          style: TextStyle(
+                              fontFamily: "Avenir",
+                              fontWeight: FontWeight.normal,
+                              color: AppColors.primarySecondaryElementText,
+                              fontSize: 12.sp),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 86.w,
+                    height: 44.w,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          item.last_time == null
+                              ? ""
+                              : duTimeLineFormat(
+                                  (item.last_time as Timestamp).toDate()),
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          softWrap: true,
+                          style: TextStyle(
+                              fontFamily: "Avenir",
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.thirdElementText,
+                              fontSize: 14.sp),
+                        ),
                       ],
                     ),
                   )
@@ -323,12 +459,15 @@ class MessagePage extends GetView<MessageController> {
                           ? SliverList(
                               delegate:
                                   SliverChildBuilderDelegate((context, index) {
-                              print(
-                                  'msglistkilength${controller.state.msgslist.length}');
                               var item = controller.state.msgslist[index];
                               return chatListItem(item);
                             }, childCount: controller.state.msgslist.length))
-                          : SliverToBoxAdapter())
+                          : SliverList(
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
+                              var item = controller.state.calllist[index];
+                              return callListItem(item);
+                            }, childCount: controller.state.calllist.length)))
                 ],
               )
             ],

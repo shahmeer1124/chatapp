@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -32,7 +31,7 @@ Future firebaseChatInit() async {
         .createNotificationChannel(FirebaseMassagingHandler.channel_message);
   }
 }
-
+// Upgrading Flutter to 3.13.6 from 3.10.5 in C:\src\flutter...
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

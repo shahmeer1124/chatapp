@@ -11,6 +11,9 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lechat/common/apis/apis.dart';
 import 'package:lechat/common/entities/chat.dart';
+import 'package:lechat/common/entities/chatcall.dart';
+import 'package:lechat/common/entities/msg.dart';
+import 'package:lechat/common/entities/msgcontent.dart';
 import 'package:lechat/pages/messages/voicecall/state.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -46,7 +49,6 @@ class VoiceCallController extends GetxController {
 
   Future<void> sendPushNotification(String title, String message) async {
     String? fcmToken = await getFCMTokenFromFirestore();
-    List<Future<void>> futures = [];
     Map<String, dynamic> notification = {
       'notification': {
         'title': title,
@@ -219,9 +221,73 @@ class VoiceCallController extends GetxController {
     Get.back();
   }
 
+  Future<void> addCallTime() async {
+    var profile = UserStore.to.profile;
+    var metaData = ChatCall(
+        from_token: profile.token,
+        to_token: state.to_token.value,
+        from_name: profile.name,
+        to_name: state.to_name.value,
+        from_avatar: profile.avatar,
+        to_avatar: state.to_avatar.value,
+        call_time: "${state.calltime.value}",
+        type: "voice",
+        last_time: Timestamp.now());
+    await db
+        .collection("chatcall")
+        .withConverter(
+            fromFirestore: ChatCall.fromFirestore,
+            toFirestore: (ChatCall msg, options) => msg.toFirestore())
+        .add(metaData);
+    String sendContent = "call time ${state.calltime.value} 📞";
+    saveMessage(sendContent);
+  }
+
+  saveMessage(String sendContent) async {
+    if (state.doc_id.value.isEmpty) {
+      return;
+    }
+    final content = Msgcontent(
+        token: profile_token,
+        content: sendContent,
+        type: "text",
+        addtime: Timestamp.now());
+    await db
+        .collection("message")
+        .doc(state.doc_id.value)
+        .collection('msglist')
+        .withConverter(
+            fromFirestore: Msgcontent.fromFirestore,
+            toFirestore: (Msgcontent msg, options) => msg.toFirestore())
+        .add(content);
+    var messageRes = await db
+        .collection("message")
+        .doc(state.doc_id.value)
+        .withConverter(
+            fromFirestore: Msg.fromFirestore,
+            toFirestore: (Msg msg, options) => msg.toFirestore())
+        .get();
+    if (messageRes.data() != null) {
+      var item = messageRes.data()!;
+      int to_msg_num = item.to_msg_num == null ? 0 : item.to_msg_num!;
+      int from_msg_num = item.from_msg_num == null ? 0 : item.from_msg_num!;
+      if (item.from_token == profile_token) {
+        from_msg_num = from_msg_num + 1;
+      } else {
+        to_msg_num = to_msg_num + 1;
+      }
+      await db.collection("message").doc(state.doc_id.value).update({
+        "to_msg_num":to_msg_num,
+        "from_msg_num":from_msg_num,
+        "last_msg":sendContent,"last_time":Timestamp.now()
+      });
+    }
+  }
+
   void alldispose() async {
     await player.pause();
     await engine.leaveChannel();
+    await addCallTime();
     await engine.release();
     await player.stop();
   }

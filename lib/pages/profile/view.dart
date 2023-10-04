@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -35,14 +36,31 @@ class ProfilePage extends GetView<ProfileController> {
               ],
               color: AppColors.primarySecondaryBackground,
               borderRadius: BorderRadius.all(Radius.circular(60.w))),
-          child: Image(
-            height: 120.h,
-            width: 120.w,
-            image: AssetImage(
-              'assets/images/account_header.png',
-            ),
-            fit: BoxFit.cover,
-          ),
+          child: controller.state.head_detail.value.avatar != null
+              ? CachedNetworkImage(
+                  imageUrl: controller.state.head_detail.value.avatar!,
+                  height: 120.w,
+                  width: 120.w,
+                  imageBuilder: (context, ImageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60.w),
+                      ),
+                      image: DecorationImage(
+                          image: ImageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => const Image(
+                      image: AssetImage('assets/images/account_header.png')),
+                )
+              : Image(
+                  height: 120.h,
+                  width: 120.w,
+                  image: AssetImage(
+                    'assets/images/account_header.png',
+                  ),
+                  fit: BoxFit.cover,
+                ),
         ),
         Positioned(
             bottom: 0.w,

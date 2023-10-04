@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lechat/pages/messages/videocall/index.dart';
 import '../../pages/contacts/index.dart';
 import '../../pages/frame/sign_in/index.dart';
 import '../../pages/frame/welcome/index.dart';
@@ -60,6 +61,6 @@ class AppPages {
 
     // GetPage(name: AppRoutes.Photoimgview, page: () => PhotoImgViewPage(), binding: PhotoImgViewBinding()),
     GetPage(name: AppRoutes.VoiceCall, page: () => VoiceCallViewPage(), binding: VoiceCallViewBinding()),
-    // GetPage(name: AppRoutes.VideoCall, page: () => VideoCallPage(), binding: VideoCallBinding()),
+    GetPage(name: AppRoutes.VideoCall, page: () => VideoCallPage(), binding: VideoCallBinding()),
   ];
 }

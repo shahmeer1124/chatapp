@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +10,7 @@ import 'package:lechat/common/apis/apis.dart';
 import 'package:lechat/common/entities/entities.dart';
 import 'package:lechat/common/store/store.dart';
 import 'package:lechat/pages/messages/chat/state.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../common/entities/msgcontent.dart';
 import '../../../common/routes/names.dart';
 import 'package:http/http.dart' as http;
@@ -30,24 +29,25 @@ class ChatController extends GetxController {
   final textController = TextEditingController();
   final token = UserStore.to.profile.token;
 
-Future imgFromGallery() async {
-  try {
-    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _photo = File(pickedFile.path);
-      uploadFile();
-    } else {
-      print('No image selected');
-    }
-  } catch (e) {
-    print('Error selecting image: $e');
+  void closeAllPop() {
+    Get.focusScope?.unfocus();
+    state.more_status.value = false;
   }
-}
 
+  Future imgFromGallery() async {
+    try {
+      final pickedFile =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        _photo = File(pickedFile.path);
+        uploadFile();
+      } else {}
+    } catch (e) {}
+  }
 
   Future uploadFile() async {
-    print('ygantkayahai');
     var result = await ChatAPI.upload_img(file: _photo);
+
     if (result.code == 0) {
       sendImageMessage(result.data!);
     } else {
@@ -66,7 +66,7 @@ Future imgFromGallery() async {
     final content = Msgcontent(
       token: token,
       content: url,
-      type: 'text',
+      type: 'image',
       addtime: Timestamp.now(),
     );
     // Add the message to the database
@@ -160,7 +160,6 @@ Future imgFromGallery() async {
   }
 
   Future<void> asyncLoadMoreData() async {
-    print('fucntioncallhuahai');
     final messages = await db
         .collection('message')
         .doc(doc_id)
@@ -205,7 +204,6 @@ Future imgFromGallery() async {
       type: 'text',
       addtime: Timestamp.now(),
     );
-    // Add the message to the database
     await db
         .collection('message')
         .doc(doc_id)
@@ -239,10 +237,27 @@ Future imgFromGallery() async {
         "last_time": Timestamp.now()
       });
     }
+    sendNotification('message');
+  }
+
+  Future<void> sendNotification(String call_type) async {
+    print('yes this get called');
+    CallRequestEntity callRequestEntity = CallRequestEntity();
+    callRequestEntity.call_type = call_type;
+    callRequestEntity.to_token = state.to_token.value;
+    callRequestEntity.to_avatar = state.to_avatar.value;
+    callRequestEntity.doc_id = doc_id;
+    callRequestEntity.to_name = state.to_name.value;
+    print('message going to toke${state.to_token.value}');
+    var res = await ChatAPI.call_notifications(params: callRequestEntity);
+    if (res.code == 0) {
+      print('notification success');
+    } else {
+      print('notification unsuccessful');
+    }
   }
 
   Future<String?> getFCMTokenFromFirestore() async {
-    print('tokenchecker${state.to_token}');
     final usersCollectionRef = FirebaseFirestore.instance.collection('users');
     final userSnapshot = await usersCollectionRef
         .where('token', isEqualTo: state.to_token.toString())
@@ -251,7 +266,6 @@ Future imgFromGallery() async {
     if (userSnapshot.docs.isNotEmpty) {
       final userData = userSnapshot.docs[0].data();
       final fcmToken = userData['fcmtoken'] as String?;
-      print('fcmtokenprinter$fcmToken');
       return fcmToken;
     }
 
@@ -260,7 +274,6 @@ Future imgFromGallery() async {
 
   Future<void> sendPushNotification(String title, String message) async {
     String? fcmToken = await getFCMTokenFromFirestore();
-    List<Future<void>> futures = [];
 
     Map<String, dynamic> notification = {
       'notification': {'title': title, 'body': 'message:${message}'},
@@ -301,6 +314,52 @@ Future imgFromGallery() async {
     });
   }
 
+  void videoCall() async {
+    state.more_status.value = false;
+    bool micStatus = await requestPermission(Permission.microphone);
+    bool camStatus = await requestPermission(Permission.camera);
+    if (GetPlatform.isAndroid && micStatus && camStatus) {
+      Get.toNamed(AppRoutes.VideoCall, parameters: {
+        "to_name": state.to_name.value,
+        "to_avatar": state.to_avatar.value,
+        "call_role": "anchor",
+        "to_token": state.to_token.value,
+        "doc_id": doc_id
+      });
+    } else {
+      Get.toNamed(AppRoutes.VideoCall, parameters: {
+        "to_name": state.to_name.value,
+        "to_avatar": state.to_avatar.value,
+        "call_role": "anchor",
+        "to_token": state.to_token.value,
+        "doc_id": doc_id
+      });
+    }
+  }
+
+  Future<bool> requestPermission(Permission permission) async {
+    var permissionStatus = await permission.status;
+    if (permissionStatus != PermissionStatus.granted) {
+      var status = permission.request();
+      if (status != PermissionStatus.granted) {
+        Fluttertoast.showToast(
+            msg: "Please enable permission to continue",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        if (GetPlatform.isAndroid) {
+          await openAppSettings();
+        }
+
+        return false;
+      }
+    }
+    return true;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -310,5 +369,39 @@ Future imgFromGallery() async {
     state.to_name.value = data['to_name'] ?? "";
     state.to_avatar.value = data['to_avatar'] ?? "";
     state.to_online.value = data['to_online'] ?? "1";
+    clearMsgNum(doc_id);
+  }
+
+  clearMsgNum(String doc_id) async {
+    var messageResult = await db
+        .collection('message')
+        .doc(doc_id)
+        .withConverter(
+            fromFirestore: Msg.fromFirestore,
+            toFirestore: (Msg msg, options) => msg.toFirestore())
+        .get();
+    if (messageResult.data() != null) {
+      var item = messageResult.data()!;
+      int to_msg_num = item.to_msg_num == null ? 0 : item.to_msg_num!;
+      int from_msg_num = item.from_msg_num == null ? 0 : item.from_msg_num!;
+      if (item.from_token == token) {
+        to_msg_num = 0;
+      } else {
+        from_msg_num = 0;
+      }
+      await db.collection('message').doc(doc_id).update({
+        "to_msg_num": to_msg_num,
+        "from_msg_num": from_msg_num,
+      });
+    }
+  }
+
+  @override
+  void onClose() {
+    listener.cancel();
+    clearMsgNum(doc_id);
+    msgScrolling.dispose();
+    textController.dispose();
+    super.onClose();
   }
 }

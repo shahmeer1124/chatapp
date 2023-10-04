@@ -246,7 +246,9 @@ class ChatPage extends GetView<ChatController> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              controller.videoCall();
+                            },
                             child: Container(
                               padding: EdgeInsets.all(10.h),
                               decoration: BoxDecoration(

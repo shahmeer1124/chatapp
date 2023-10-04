@@ -4,10 +4,8 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide FormData;
-
 import '../store/user.dart';
 import '../values/cache.dart';
 import '../values/server.dart';
@@ -110,7 +108,7 @@ class HttpUtil {
         EasyLoading.showError(eInfo.message);
         break;
       default:
-        EasyLoading.showError('未知错误');
+        EasyLoading.showError('Network Error');
         break;
     }
   }
