@@ -58,8 +58,6 @@ class FirebaseMassagingHandler {
       RemoteMessage? initialMessage =
           await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
-        print("initialMessage------");
-        print(initialMessage);
       }
       var initializationSettingsAndroid =
           AndroidInitializationSettings("ic_launcher");
@@ -69,7 +67,6 @@ class FirebaseMassagingHandler {
           iOS: darwinInitializationSettings);
       flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: (value) {
-        print("----------onDidReceiveNotificationResponse");
       });
 
       await FirebaseMessaging.instance
@@ -77,14 +74,12 @@ class FirebaseMassagingHandler {
               alert: true, badge: true, sound: true);
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-        print("\n notification on onMessage function \n");
-        print(message);
+      
         if (message != null) {
           _receiveNotification(message);
         }
       });
     } on Exception catch (e) {
-      print("$e");
     }
   }
 
@@ -286,10 +281,8 @@ class FirebaseMassagingHandler {
     callRequestEntity.doc_id = doc_id;
     callRequestEntity.to_name = to_name;
     var res = await ChatAPI.call_notifications(params: callRequestEntity);
-    print("sendNotifications");
-    print(res);
+    
     if (res.code == 0) {
-      print("sendNotifications success");
     } else {
       // Get.snackbar("Tips", "Notification error!");
       // Get.offAllNamed(AppRoutes.Message);
@@ -336,9 +329,7 @@ class FirebaseMassagingHandler {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print("message data: ${message.data}");
-    print("message data: ${message}");
-    print("message data: ${message.notification}");
+ 
 
     if (message != null) {
       if (message.data != null && message.data["call_type"] != null) {
@@ -358,7 +349,6 @@ class FirebaseMassagingHandler {
             "call_type": message.data["call_type"],
             "expire_time": DateTime.now().toString(),
           };
-          print(data);
           var _prefs = await SharedPreferences.getInstance();
           await _prefs.setString("CallVocieOrVideo", jsonEncode(data));
         }

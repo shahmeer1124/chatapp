@@ -17,6 +17,9 @@ class MessageController extends GetxController {
   final state = MessageState();
   final db = FirebaseFirestore.instance;
   final token = UserStore.to.profile.token;
+
+
+
   void getProfile() async {
     var profile = await UserStore.to.profile;
     state.head_detail.value = profile;

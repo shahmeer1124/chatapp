@@ -6,7 +6,6 @@ class UserAPI {
   static Future<UserLoginResponseEntity> Login({
     LoginRequestEntity? params,
   }) async {
-    print('method got called');
     var response = await HttpUtil().post(
       'api/login',
       queryParameters: params?.toJson(),

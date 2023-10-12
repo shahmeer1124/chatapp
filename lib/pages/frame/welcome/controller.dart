@@ -4,7 +4,7 @@ import 'package:lechat/pages/frame/welcome/state.dart';
 
 class WelcomeController extends GetxController {
   WelcomeController();
-  final title = "LeChat .";
+  final title = "CheckSum .";
   final state = WelcomeState();
   @override
   void onReady() {

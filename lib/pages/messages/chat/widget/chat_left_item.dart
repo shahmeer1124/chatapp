@@ -10,7 +10,6 @@ import '../../../../common/style/color.dart';
 Widget LeftChatItem(Msgcontent item) {
    var imagepath = null;
   if (item.type == 'image') {
-    print('imagedata${item.content}');
    imagepath= item.content?.replaceAll('http://localhost/', SERVER_API_URL);
   }
   return Container(

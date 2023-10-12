@@ -11,7 +11,6 @@ class ContactList extends GetView<ContactController> {
   const ContactList({super.key});
 
   Widget _buildListItems(ContactItem item) {
-    print('avataravatar${item.avatar}');
     return Container(
       padding: EdgeInsets.only(top: 10.h),
       decoration: const BoxDecoration(

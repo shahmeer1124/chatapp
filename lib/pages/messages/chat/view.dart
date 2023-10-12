@@ -204,7 +204,6 @@ class ChatPage extends GetView<ChatController> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print('yahicallhuahai');
                               controller.imgFromGallery();
                             },
                             child: Container(

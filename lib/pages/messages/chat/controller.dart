@@ -172,7 +172,6 @@ class ChatController extends GetxController {
         .limit(10)
         .get();
     if (messages.docs.isNotEmpty) {
-      print('databhihai');
       messages.docs.forEach((element) {
         var data = element.data();
         state.msgcontentList.add(data);
@@ -241,19 +240,15 @@ class ChatController extends GetxController {
   }
 
   Future<void> sendNotification(String call_type) async {
-    print('yes this get called');
     CallRequestEntity callRequestEntity = CallRequestEntity();
     callRequestEntity.call_type = call_type;
     callRequestEntity.to_token = state.to_token.value;
     callRequestEntity.to_avatar = state.to_avatar.value;
     callRequestEntity.doc_id = doc_id;
     callRequestEntity.to_name = state.to_name.value;
-    print('message going to toke${state.to_token.value}');
     var res = await ChatAPI.call_notifications(params: callRequestEntity);
     if (res.code == 0) {
-      print('notification success');
     } else {
-      print('notification unsuccessful');
     }
   }
 
@@ -294,13 +289,10 @@ class ChatController extends GetxController {
     http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: json.encode(notification));
     if (response.statusCode == 200) {
-      print('Push notification sent successfully to $fcmToken');
     } else {
-      print(
-          'Failed to send push notification to $fcmToken. Error: ${response.body}');
+      
     }
 
-    print("Push notifications sent successfully.");
   }
 
   void audioCall() {

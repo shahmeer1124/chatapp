@@ -90,8 +90,7 @@ class VoiceCallViewPage extends GetView<VoiceCallController> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print('leaverleaver');
-                                  print('leavervalue${controller.state.isJoined.value}');
+                                 
                                   controller.state.isJoined.value
                                       ? controller.leaveChannel()
                                       : controller.joinChannel();

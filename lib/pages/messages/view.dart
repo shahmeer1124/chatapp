@@ -19,6 +19,7 @@ class MessagePage extends GetView<MessageController> {
         height: 44.w,
         margin: EdgeInsets.only(top: 20.h, bottom: 20.h),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Stack(
               children: [
@@ -79,7 +80,7 @@ class MessagePage extends GetView<MessageController> {
                               width: 2.w, color: AppColors.primaryElementText)),
                     ))
               ],
-            )
+            ),
           ],
         ),
       ),

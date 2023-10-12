@@ -47,7 +47,6 @@ class UserStore extends GetxController {
   }
 
   Future<void> setMsgToken(String value) async {
-    print('messagetoken$value');
     await StorageService.to.setString(STORAGE_MESSAGE_TOKEN_KEY, value);
     msgtoken = value;
   }

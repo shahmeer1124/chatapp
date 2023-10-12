@@ -42,7 +42,6 @@ class VoiceCallController extends GetxController {
     state.doc_id.value = data['doc_id'] ?? "";
     state.to_token.value = data['to_token'] ?? "";
 
-    print('tokenprinter${state.to_token.value}');
     initEngine();
     super.onInit();
   }
@@ -74,17 +73,13 @@ class VoiceCallController extends GetxController {
     http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: json.encode(notification));
     if (response.statusCode == 200) {
-      print('Push notification sent successfully to $fcmToken');
     } else {
-      print(
-          'Failed to send push notification to $fcmToken. Error: ${response.body}');
+
     }
 
-    print("Push notifications sent successfully.");
   }
 
   Future<String?> getFCMTokenFromFirestore() async {
-    print('tokenchecker${to_token}');
     final usersCollectionRef = FirebaseFirestore.instance.collection('users');
     final userSnapshot = await usersCollectionRef
         .where('token', isEqualTo: to_token.toString())
@@ -93,7 +88,6 @@ class VoiceCallController extends GetxController {
     if (userSnapshot.docs.isNotEmpty) {
       final userData = userSnapshot.docs[0].data();
       final fcmToken = userData['fcmtoken'] as String?;
-      print('fcmtokenprinter$fcmToken');
       return fcmToken;
     }
 
@@ -106,15 +100,12 @@ class VoiceCallController extends GetxController {
     await engine.initialize(RtcEngineContext(appId: AppId));
     engine.registerEventHandler(RtcEngineEventHandler(
         onError: (ErrorCodeType error, String msg) {
-      print("[on error ] err $error , , msg: $msg");
     }, onJoinChannelSuccess: (RtcConnection conntection, int elapsed) {
-      print("onConnectionjoinedbyusers ${conntection.toJson()}");
       state.isJoined.value = true;
     }, onUserJoined:
             (RtcConnection conntection, int remoteid, int elapsed) async {
       await player.pause();
     }, onLeaveChannel: (RtcConnection connection, RtcStats stats) {
-      print("user left the room");
       state.isJoined.value = false;
     }, onRtcStats: (RtcConnection connection, RtcStats stats) {
       String duration = formatCallDuration(stats.duration!);
@@ -133,19 +124,15 @@ class VoiceCallController extends GetxController {
   }
 
   Future<void> sendNotification(String call_type) async {
-    print('yes this get called');
     CallRequestEntity callRequestEntity = CallRequestEntity();
     callRequestEntity.call_type = call_type;
     callRequestEntity.to_token = state.to_token.value;
     callRequestEntity.to_avatar = state.to_avatar.value;
     callRequestEntity.doc_id = state.doc_id.value;
     callRequestEntity.to_name = state.to_name.value;
-    print('message going to toke${state.to_token.value}');
     var res = await ChatAPI.call_notifications(params: callRequestEntity);
     if (res.code == 0) {
-      print('notification success');
     } else {
-      print('notification unsuccessful');
     }
   }
 
@@ -177,7 +164,6 @@ class VoiceCallController extends GetxController {
     }
     CallTokenRequestEntity callTokenRequestEntity = CallTokenRequestEntity();
     callTokenRequestEntity.channel_name = state.channelId.value;
-    print('channel_id_is_this${state.channelId.value}');
     var res = await ChatAPI.call_token(params: callTokenRequestEntity);
     if (res.code == 0) {
       return res.data!;
@@ -209,7 +195,6 @@ class VoiceCallController extends GetxController {
   }
 
   void leaveChannel() async {
-    print('leavechannelcalled');
     EasyLoading.show(
       indicator: CircularProgressIndicator(),
       maskType: EasyLoadingMaskType.clear,

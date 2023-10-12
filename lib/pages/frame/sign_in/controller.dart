@@ -22,14 +22,11 @@ class SignInController extends GetxController {
     try {
       if (type == "phone number") {
         if (kDebugMode) {
-          print(".. login with phone number");
         }
       } else if (type == 'google') {
-        print("google login pressed");
         var user = await _googleSignIn.signIn();
 
         if (user != null) {
-          print('meinphotourllaya${user.photoUrl}');
           String? displayName = user.displayName;
           String email = user.email;
           String id = user.id;
@@ -40,18 +37,15 @@ class SignInController extends GetxController {
           loginRequestEntity.email = email;
           loginRequestEntity.open_id = id;
           loginRequestEntity.type = 2;
-          print(jsonEncode(loginRequestEntity));
 
           asyncPostallData(loginRequestEntity);
         }
       } else {
         if (kDebugMode) {
-          print("Type not specified");
         }
       }
     } catch (e) {
       if (kDebugMode) {
-        print('... error with login $e');
       }
     }
   }

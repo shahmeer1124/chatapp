@@ -22,7 +22,6 @@ class ContactController extends GetxController {
   }
 
   void goChat(ContactItem contactItem) async {
-    print('to_user_token${contactItem.token}');
     var from_messages = await db
         .collection("message")
         .withConverter(
@@ -42,7 +41,6 @@ class ContactController extends GetxController {
         .get();
 
     if (from_messages.docs.isEmpty && to_messages.docs.isEmpty) {
-        print('againtokencheckcup1${contactItem.token}');
 
       // If both lists are empty, create a new message document
       var profile = UserStore.to.profile;
@@ -76,7 +74,6 @@ class ContactController extends GetxController {
     } else {
       if (from_messages.docs.isNotEmpty &&
           from_messages.docs.first.id.isNotEmpty) {
-        print('againtokencheckcup${contactItem.token}');
         // Check if the 'from_messages' list is not empty
         Get.toNamed("/chat", arguments: {
           "doc_id": from_messages.docs.first.id,
@@ -99,76 +96,6 @@ class ContactController extends GetxController {
     }
   }
 
-  // void goChat(ContactItem contactItem) async {
-  //   var from_messages = await db
-  //       .collection("message")
-  //       .withConverter(
-  //           fromFirestore: Msg.fromFirestore,
-  //           toFirestore: (Msg msg, options) => msg.toFirestore())
-  //       .where("from_token", isEqualTo: token)
-  //       .where("to_token", isEqualTo: contactItem.token)
-  //       .get();
-
-  //   var to_messages = await db
-  //       .collection("message")
-  //       .withConverter(
-  //           fromFirestore: Msg.fromFirestore,
-  //           toFirestore: (Msg msg, options) => msg.toFirestore())
-  //       .where("from_token", isEqualTo: contactItem.token)
-  //       .where("to_token", isEqualTo: token)
-  //       .get();
-
-  //   if (from_messages.docs.isEmpty && to_messages.docs.isEmpty) {
-  //     var profile = UserStore.to.profile;
-  //     var msgdata = Msg(
-  //         from_token: profile.token,
-  //         to_token: contactItem.token,
-  //         from_avatar: profile.avatar,
-  //         to_avatar: contactItem.avatar,
-  //         from_name: profile.name,
-  //         to_name: contactItem.name,
-  //         from_online: profile.online,
-  //         to_online: contactItem.online,
-  //         last_msg: '',
-  //         last_time: Timestamp.now(),
-  //         msg_num: 0);
-  //     var doc_id = await db
-  //         .collection("message")
-  //         .withConverter(
-  //             fromFirestore: Msg.fromFirestore,
-  //             toFirestore: (Msg msg, options) => msg.toFirestore())
-  //         .add(msgdata);
-  //     Get.toNamed("/chat", arguments: {
-  //       "doc_id": doc_id.id,
-  //       "to_token": contactItem.token ?? '',
-  //       "to_name": contactItem.name ?? '',
-  //       'to_avatar': contactItem.avatar ?? '',
-  //       "to_online": contactItem.online.toString()
-  //     });
-  //   } else {
-  //     if(from_messages.docs.first.id.isNotEmpty){
-
-  //     Get.toNamed("/chat", arguments: {
-  //       "doc_id": from_messages.docs.first.id,
-  //       "to_token": contactItem.token ?? '',
-  //       "to_name": contactItem.name ?? '',
-  //       'to_avatar': contactItem.avatar ?? '',
-  //       "to_online": contactItem.online.toString()
-  //     });
-  //     }
-  //     if(to_messages.docs.first.id.isNotEmpty){
-
-  //     Get.toNamed("/chat", arguments: {
-  //       "doc_id": to_messages.docs.first.id,
-  //       "to_token": contactItem.token ?? '',
-  //       "to_name": contactItem.name ?? '',
-  //       'to_avatar': contactItem.avatar ?? '',
-  //       "to_online": contactItem.online.toString()
-  //     });
-  //     }
-  //   }
-  // }
-
   asyncLoadAllData() async {
     EasyLoading.show(
       indicator: CircularProgressIndicator(),
@@ -177,7 +104,6 @@ class ContactController extends GetxController {
     );
     state.contactlist.clear();
     var result = await ContactAPI.post_contact();
-    print('dataincoming${result.data!.length}');
     if (result.code == -1) {
       state.contactlist.addAll(result.data!);
     }

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lechat/common/values/colors.dart';
 import '../../../common/style/color.dart';
-import '../../../global.dart';
 import 'controller.dart';
 
 class SignInPage extends GetView<SignInController> {
@@ -13,7 +12,7 @@ class SignInPage extends GetView<SignInController> {
     return Container(
       margin: EdgeInsets.only(top: 100.h, bottom: 80.h),
       child: Text(
-        "LeChat .",
+        "CheckSum .",
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColor.primaryText,

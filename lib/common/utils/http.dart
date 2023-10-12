@@ -98,10 +98,7 @@ class HttpUtil {
 
   // 错误处理
   void onError(ErrorEntity eInfo) {
-    print('error.code -> ' +
-        eInfo.code.toString() +
-        ', error.message -> ' +
-        eInfo.message);
+
     switch (eInfo.code) {
       case 401:
         UserStore.to.onLogout();
@@ -190,7 +187,6 @@ class HttpUtil {
     if (Get.isRegistered<UserStore>() && UserStore.to.hasToken == true) {
       headers['Authorization'] = 'Bearer ${UserStore.to.token}';
     }
-    print('headersvalue$headers');
     return headers;
   }
 
@@ -250,7 +246,6 @@ class HttpUtil {
     if (authorization != null) {
       requestOptions.headers!.addAll(authorization);
     }
-    print('datasentout$data');
     var response = await dio.post(
       path,
       data: data,
