@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 Widget rightChatItem(Msgcontent item) {
   var imagepath = null;
   if (item.type == 'image') {
-   imagepath= item.content?.replaceAll('http://localhost/', SERVER_API_URL);
+    imagepath = item.content?.replaceAll('http://localhost/', SERVER_API_URL);
   }
   String formattedTime = DateFormat('h:mm a').format(item.addtime!.toDate());
 
@@ -24,7 +24,7 @@ Widget rightChatItem(Msgcontent item) {
             maxWidth: 0.8.sw, // Maximum width is 80% of the screen width
           ),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 22, 30, 146),
+            color: Colors.black,
             borderRadius: BorderRadius.all(
               Radius.circular(5.w),
             ),
@@ -52,29 +52,21 @@ Widget rightChatItem(Msgcontent item) {
                         fit: BoxFit.cover, // Adjust the fit as needed
                       ),
                     ),
-              Container(
-                width: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 6.w, right: 3),
-                      child: Text(
-                        formattedTime,
-                        style: appstyle(13, Colors.grey, FontWeight.normal),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 5.w, bottom: 5.w),
-                      child: Icon(
-                        Icons.done,
-                        color: Colors.blue,
-                        size: 16.0,
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              // Container(
+              //   width: 100,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: [
+              //       Padding(
+              //         padding: EdgeInsets.only(bottom: 6.w, right: 3),
+              //         child: Text(
+              //           formattedTime,
+              //           style: appstyle(13, Colors.grey, FontWeight.normal),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // )
             ],
           ),
         ),

@@ -73,10 +73,7 @@ class VoiceCallController extends GetxController {
     http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: json.encode(notification));
     if (response.statusCode == 200) {
-    } else {
-
-    }
-
+    } else {}
   }
 
   Future<String?> getFCMTokenFromFirestore() async {
@@ -95,22 +92,28 @@ class VoiceCallController extends GetxController {
   }
 
   Future<void> initEngine() async {
-    await player.setAsset("assets/Sound_Horizon.mp3");
+    await player.setAsset(
+      "assets/Sound_Horizon.mp3",
+    );
+
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(appId: AppId));
     engine.registerEventHandler(RtcEngineEventHandler(
-        onError: (ErrorCodeType error, String msg) {
-    }, onJoinChannelSuccess: (RtcConnection conntection, int elapsed) {
-      state.isJoined.value = true;
-    }, onUserJoined:
+        onError: (ErrorCodeType error, String msg) {},
+        onJoinChannelSuccess: (RtcConnection conntection, int elapsed) {
+          state.isJoined.value = true;
+        },
+        onUserJoined:
             (RtcConnection conntection, int remoteid, int elapsed) async {
-      await player.pause();
-    }, onLeaveChannel: (RtcConnection connection, RtcStats stats) {
-      state.isJoined.value = false;
-    }, onRtcStats: (RtcConnection connection, RtcStats stats) {
-      String duration = formatCallDuration(stats.duration!);
-      state.calltime.value = duration;
-    }));
+          await player.pause();
+        },
+        onLeaveChannel: (RtcConnection connection, RtcStats stats) {
+          state.isJoined.value = false;
+        },
+        onRtcStats: (RtcConnection connection, RtcStats stats) {
+          String duration = formatCallDuration(stats.duration!);
+          state.calltime.value = duration;
+        }));
     await engine.enableAudio();
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.setAudioProfile(
@@ -132,8 +135,7 @@ class VoiceCallController extends GetxController {
     callRequestEntity.to_name = state.to_name.value;
     var res = await ChatAPI.call_notifications(params: callRequestEntity);
     if (res.code == 0) {
-    } else {
-    }
+    } else {}
   }
 
   String formatCallDuration(int seconds) {
@@ -262,9 +264,10 @@ class VoiceCallController extends GetxController {
         to_msg_num = to_msg_num + 1;
       }
       await db.collection("message").doc(state.doc_id.value).update({
-        "to_msg_num":to_msg_num,
-        "from_msg_num":from_msg_num,
-        "last_msg":sendContent,"last_time":Timestamp.now()
+        "to_msg_num": to_msg_num,
+        "from_msg_num": from_msg_num,
+        "last_msg": sendContent,
+        "last_time": Timestamp.now()
       });
     }
   }

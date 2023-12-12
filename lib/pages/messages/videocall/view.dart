@@ -59,8 +59,49 @@ class VideoCallPage extends GetView<VideoCallController> {
                           left: 30.w,
                           right: 30.w,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.1,
+                              ),
+                              Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      controller.switchCamera();
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(15.w),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(30.w))),
+                                      width: 60.w,
+                                      height: 60.h,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.camera_front_outlined,
+                                          color: Colors.white,
+                                          size: 29,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10.h),
+                                    child: Text(
+                                      "Switch Camera",
+                                      style: TextStyle(
+                                          color: AppColors.primaryElementText,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                              ),
                               Column(
                                 children: [
                                   GestureDetector(
@@ -110,18 +151,25 @@ class VideoCallPage extends GetView<VideoCallController> {
                               child: Column(
                                 children: [
                                   Container(
-                                    width: 70.w,
-                                    height: 70.w,
-                                    margin: EdgeInsets.only(top: 150.h),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.w),
-                                        color: AppColors.primaryElementText),
-                                    child: Image.network(
-                                      controller.state.to_avatar.value,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                      width: 70.w,
+                                      height: 70.w,
+                                      margin: EdgeInsets.only(top: 150.h),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.w),
+                                          color: AppColors.primaryElementText),
+                                      child: controller.state.to_avatar.value
+                                              .toString()
+                                              .contains("https")
+                                          ? Image.network(
+                                              controller.state.to_avatar.value
+                                                  .toString(),
+                                              fit: BoxFit.fill,
+                                            )
+                                          : Icon(
+                                              Icons.person_pin,
+                                              size: 39,
+                                            )),
                                   Container(
                                     margin: EdgeInsets.only(top: 6.h),
                                     child: Text(

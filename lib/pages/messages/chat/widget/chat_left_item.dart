@@ -6,11 +6,10 @@ import 'package:lechat/common/values/server.dart';
 import '../../../../common/entities/msgcontent.dart';
 import '../../../../common/style/color.dart';
 
-
 Widget LeftChatItem(Msgcontent item) {
-   var imagepath = null;
+  var imagepath = null;
   if (item.type == 'image') {
-   imagepath= item.content?.replaceAll('http://localhost/', SERVER_API_URL);
+    imagepath = item.content?.replaceAll('http://localhost/', SERVER_API_URL);
   }
   return Container(
     padding: EdgeInsets.only(left: 15.w, top: 10.w, right: 15.w, bottom: 10.w),
@@ -23,7 +22,7 @@ Widget LeftChatItem(Msgcontent item) {
             maxWidth: 0.8.sw, // Maximum width is 80% of the screen width
           ),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 66, 68, 78),
+            color: Colors.grey.withOpacity(0.3),
             borderRadius: BorderRadius.all(
               Radius.circular(5.w),
             ),
@@ -33,7 +32,7 @@ Widget LeftChatItem(Msgcontent item) {
                   padding: EdgeInsets.all(10.w),
                   child: Text(
                     "${item.content}",
-                    style: appstyle(13, Colors.white, FontWeight.normal),
+                    style: appstyle(13, Colors.black, FontWeight.normal),
                   ),
                 )
               : GestureDetector(

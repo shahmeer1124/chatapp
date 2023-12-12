@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lechat/common/style/color.dart';
 import 'package:lechat/common/values/colors.dart';
 import 'controller.dart';
 
@@ -24,6 +25,7 @@ class ProfilePage extends GetView<ProfileController> {
     return Stack(
       children: [
         Container(
+          margin: EdgeInsets.only(top: 22),
           width: 120.w,
           height: 120.w,
           decoration: BoxDecoration(
@@ -62,21 +64,21 @@ class ProfilePage extends GetView<ProfileController> {
                   fit: BoxFit.cover,
                 ),
         ),
-        Positioned(
-            bottom: 0.w,
-            right: 0.w,
-            height: 35.w,
-            child: GestureDetector(
-              child: Container(
-                padding: EdgeInsets.all(7.w),
-                height: 35.w,
-                width: 35.w,
-                decoration: BoxDecoration(
-                    color: AppColors.primaryElement,
-                    borderRadius: BorderRadius.all(Radius.circular(40.w))),
-                child: Image.asset('assets/icons/edit.png'),
-              ),
-            ))
+        // Positioned(
+        //     bottom: 0.w,
+        //     right: 0.w,
+        //     height: 35.w,
+        //     child: GestureDetector(
+        //       child: Container(
+        //         padding: EdgeInsets.all(7.w),
+        //         height: 35.w,
+        //         width: 35.w,
+        //         decoration: BoxDecoration(
+        //             color: AppColors.primaryElement,
+        //             borderRadius: BorderRadius.all(Radius.circular(40.w))),
+        //         child: Image.asset('assets/icons/edit.png'),
+        //       ),
+        //     ))
       ],
     );
   }
@@ -117,7 +119,7 @@ class ProfilePage extends GetView<ProfileController> {
   Widget _buildLogoutButton() {
     return GestureDetector(
       child: Container(
-        margin: EdgeInsets.only(top: 0.h, bottom: 30.h),
+        margin: EdgeInsets.only(top: Get.height * 0.5, bottom: 30.h),
         width: 295.w,
         height: 44.h,
         decoration: BoxDecoration(
@@ -128,16 +130,25 @@ class ProfilePage extends GetView<ProfileController> {
                   blurRadius: 2,
                   offset: Offset(0, 1))
             ],
-            color: AppColors.primarySecondaryElementText,
-            borderRadius: BorderRadius.all(Radius.circular(05.w))),
+            color: AppColors.primarySecondaryElementText.withOpacity(0.3),
+            borderRadius: BorderRadius.all(Radius.circular(20.w))),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(
+              width: 10,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+            ),
+            SizedBox(
+              width: 120,
+            ),
             Text(
               "Logout",
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: AppColors.primaryElementText,
+                  color: Colors.black,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.normal),
             ),
@@ -159,6 +170,20 @@ class ProfilePage extends GetView<ProfileController> {
     );
   }
 
+  Widget _buildNameSection() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+      child: Text(
+        controller.state.head_detail.value.name.toString(),
+        style: TextStyle(
+          color: AppColor.primaryText,
+          fontWeight: FontWeight.bold,
+          fontSize: 24.sp,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,11 +194,12 @@ class ProfilePage extends GetView<ProfileController> {
           SliverToBoxAdapter(
             child: Container(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildProfilePhoto(),
-                  _buildCompletebutton(),
+                  _buildNameSection(),
+                  // _buildCompletebutton(),
                   _buildLogoutButton()
                 ],
               ),

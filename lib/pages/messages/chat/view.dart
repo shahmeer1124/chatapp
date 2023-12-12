@@ -16,9 +16,8 @@ class ChatPage extends GetView<ChatController> {
   AppBar _buildAppBar() {
     return AppBar(
       iconTheme: IconThemeData(
-        color: Colors.white, // Set your custom color here
+        color: Colors.black, // Set your custom color here
       ),
-      backgroundColor: Color(0xFF202123),
       title: Obx(() {
         return Container(
           child: Text(
@@ -28,48 +27,49 @@ class ChatPage extends GetView<ChatController> {
             style: TextStyle(
                 fontFamily: "Avenir",
                 fontWeight: FontWeight.bold,
-                color: AppColors.primaryElement,
+                color: AppColors.primaryText,
                 fontSize: 16.sp),
           ),
         );
       }),
       actions: [
-        Container(
-          margin: EdgeInsets.only(right: 20.w),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 44.w,
-                height: 44.w,
-                child: CachedNetworkImage(
-                    imageUrl: controller.state.to_avatar.value,
-                    imageBuilder: ((context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(22.w),
-                              image: DecorationImage(image: imageProvider)),
-                        )),
-                    errorWidget: (context, url, error) => Image(
-                          image: AssetImage("assets/images/account_header.png"),
-                        )),
-              ),
-              Positioned(
-                  bottom: 5.w,
-                  right: 0.w,
-                  child: Container(
-                    width: 14.w,
-                    height: 14.w,
-                    decoration: BoxDecoration(
-                        color: controller.state.to_online.value == "1"
-                            ? AppColors.primaryElementStatus
-                            : AppColors.primarySecondaryElementText,
-                        borderRadius: BorderRadius.circular(12.w),
-                        border: Border.all(
-                            width: 2, color: AppColors.primaryElementText)),
-                  ))
-            ],
-          ),
-        ),
+        // Container(
+        //   margin: EdgeInsets.only(right: 20.w),
+        //   child: Stack(
+        //     alignment: Alignment.center,
+        //     children: [
+        //       Container(
+        //         width: 44.w,
+        //         height: 44.w,
+        //         child: CachedNetworkImage(
+        //             imageUrl: controller.state.to_avatar.value,
+        //             imageBuilder: ((context, imageProvider) => Container(
+        //                   decoration: BoxDecoration(
+        //                       borderRadius: BorderRadius.circular(22.w),
+        //                       image: DecorationImage(image: imageProvider)),
+        //                 )),
+        //             errorWidget: (context, url, error) => Icon(
+        //                   Icons.person_pin,
+        //                   color: Colors.black,
+        //                 )),
+        //       ),
+        //       Positioned(
+        //           bottom: 5.w,
+        //           right: 0.w,
+        //           child: Container(
+        //             width: 14.w,
+        //             height: 14.w,
+        //             decoration: BoxDecoration(
+        //                 color: controller.state.to_online.value == "1"
+        //                     ? AppColors.primaryElementStatus
+        //                     : AppColors.primarySecondaryElementText,
+        //                 borderRadius: BorderRadius.circular(12.w),
+        //                 border: Border.all(
+        //                     width: 2, color: AppColors.primaryElementText)),
+        //           ))
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -97,7 +97,6 @@ class ChatPage extends GetView<ChatController> {
                           padding: EdgeInsets.only(
                               top: 10.h, bottom: 10.h, left: 5.w),
                           decoration: BoxDecoration(
-                              color: Color(0xFF353641),
                               borderRadius: BorderRadius.circular(5.w),
                               border: Border.all(
                                   color:
@@ -108,7 +107,7 @@ class ChatPage extends GetView<ChatController> {
                                 width: 220.w,
                                 child: TextField(
                                   style: appstyle(
-                                      18, Colors.white, FontWeight.normal),
+                                      18, Colors.black, FontWeight.normal),
                                   controller: controller.textController,
                                   decoration: InputDecoration(
                                       focusedBorder: const OutlineInputBorder(
@@ -137,10 +136,10 @@ class ChatPage extends GetView<ChatController> {
                                 child: Container(
                                   width: 40.w,
                                   height: 40.w,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.send_outlined,
                                     size: 26,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 onTap: () {
@@ -178,51 +177,51 @@ class ChatPage extends GetView<ChatController> {
                   ? Positioned(
                       right: 20.w,
                       bottom: 70.h,
-                      height: 200.h,
+                      height: 130.h,
                       width: 40.w,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              padding: EdgeInsets.all(10.h),
-                              decoration: BoxDecoration(
-                                  color: AppColors.primaryBackground,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 2))
-                                  ],
-                                  borderRadius: BorderRadius.circular(40.w)),
-                              height: 40.h,
-                              width: 40.h,
-                              child: Image.asset("assets/icons/file.png"),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              controller.imgFromGallery();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10.h),
-                              decoration: BoxDecoration(
-                                  color: AppColors.primaryBackground,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 2))
-                                  ],
-                                  borderRadius: BorderRadius.circular(40.w)),
-                              height: 40.h,
-                              width: 40.h,
-                              child: Image.asset("assets/icons/photo.png"),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     padding: EdgeInsets.all(10.h),
+                          //     decoration: BoxDecoration(
+                          //         color: AppColors.primaryBackground,
+                          //         boxShadow: [
+                          //           BoxShadow(
+                          //               color: Colors.grey.withOpacity(0.2),
+                          //               spreadRadius: 2,
+                          //               blurRadius: 2,
+                          //               offset: Offset(1, 2))
+                          //         ],
+                          //         borderRadius: BorderRadius.circular(40.w)),
+                          //     height: 40.h,
+                          //     width: 40.h,
+                          //     child: Image.asset("assets/icons/file.png"),
+                          //   ),
+                          // ),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     controller.imgFromGallery();
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.all(10.h),
+                          //     decoration: BoxDecoration(
+                          //         color: AppColors.primaryBackground,
+                          //         boxShadow: [
+                          //           BoxShadow(
+                          //               color: Colors.grey.withOpacity(0.2),
+                          //               spreadRadius: 2,
+                          //               blurRadius: 2,
+                          //               offset: Offset(1, 2))
+                          //         ],
+                          //         borderRadius: BorderRadius.circular(40.w)),
+                          //     height: 40.h,
+                          //     width: 40.h,
+                          //     child: Image.asset("assets/icons/photo.png"),
+                          //   ),
+                          // ),
                           GestureDetector(
                             onTap: () {
                               controller.audioCall();

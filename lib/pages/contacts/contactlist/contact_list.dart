@@ -39,17 +39,18 @@ class ContactList extends GetView<ContactController> {
                         offset: const Offset(0, 1))
                   ]),
               child: CachedNetworkImage(
-                imageUrl: item.avatar != null
-                    ? item.avatar!
-                    : 'assets/images/logo.png',
-                height: 44.w,
-                width: 44.w,
-                imageBuilder: ((context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(22.w)),
-                          image: DecorationImage(image: imageProvider)),
-                    )),
-              ),
+                  imageUrl: item.avatar != null
+                      ? item.avatar!
+                      : 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
+                  height: 44.w,
+                  width: 44.w,
+                  imageBuilder: ((context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(22.w)),
+                            image: DecorationImage(image: imageProvider)),
+                      )),
+                  errorWidget: (context, url, error) => Icon(Icons.person_pin)),
             ),
             Container(
               padding: EdgeInsets.only(top: 10.w, left: 10.w),

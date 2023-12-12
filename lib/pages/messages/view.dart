@@ -218,7 +218,7 @@ class MessagePage extends GetView<MessageController> {
                       ),
                       placeholder: (context, url) =>
                           CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) => Icon(Icons.person),
                     ),
             ),
             Container(
@@ -359,8 +359,8 @@ class MessagePage extends GetView<MessageController> {
                         ),
                       ),
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.person),
                     ),
             ),
             Container(

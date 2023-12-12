@@ -12,7 +12,6 @@ class ChatList extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
-          color: Color(0xFF1B1A2F),
           padding: EdgeInsets.only(bottom: 50.h),
           child: GestureDetector(
             onTap: () {
